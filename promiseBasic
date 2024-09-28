@@ -1,0 +1,46 @@
+// Simulate a database of users
+const users = [
+  { id: 1, name: "Alice", age: 25 },
+  { id: 2, name: "Bob", age: 30 },
+  { id: 3, name: "Charlie", age: 35 },
+];
+
+// Function that simulates fetching a user by ID
+function fetchUserById(id) {
+  return new Promise((resolve, reject) => {
+    console.log(`Fetching user with ID: ${id}...`);
+
+    // Simulate a delay of 2 seconds (as if we're querying a database)
+    setTimeout(() => {
+      // Find the user by ID
+      const user = users.find((u) => u.id === id);
+
+      if (user) {
+        resolve(user); // Resolve the promise with the user data if found
+      } else {
+        reject(`User with ID ${id} not found`); // Reject the promise if not found
+      }
+    }, 2000); // 2-second delay
+  });
+}
+
+// Using the fetchUserById function with .then() and .catch()
+fetchUserById(2)
+  .then((user) => {
+    console.log("User found:", user);
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
+
+// Using the fetchUserById function with async/await
+async function getUser() {
+  try {
+    const user = await fetchUserById(1);
+    console.log("User found (async/await):", user);
+  } catch (error) {
+    console.error("Error (async/await):", error);
+  }
+}
+
+getUser();

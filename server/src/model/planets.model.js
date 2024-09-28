@@ -1,7 +1,5 @@
-const { rejects } = require("assert");
 const { parse } = require("csv-parse");
 const fs = require("fs");
-const { resolve } = require("path");
 
 const HabitablePlanet = [];
 function isHabitablePlanet(planet) {
@@ -12,6 +10,10 @@ function isHabitablePlanet(planet) {
     planet.koi_prad < 1.6
   );
 }
+
+/*   Asynchronous Data Flow: Because data is flowing in small chunks,
+ your application can start processing the data without waiting for the entire file to be read. 
+ Each chunk of parsed data triggers the data event handler in your code, allowing you to handle the data asynchronously as soon as it becomes available. */
 function loadPlanetsData() {
   return new Promise((resolve, reject) => {
     fs.createReadStream("data/Kapler_data.csv")
@@ -34,6 +36,7 @@ function loadPlanetsData() {
         reject(err); //but we still need reject to pass error
       })
       .on("end", () => {
+        //This signifies the end of the data flow, but it doesn’t stop other parts of application from running while the data is being processed. so model.export might pass data while still processing
         console.log(`${HabitablePlanet.length} habiable planets found`);
         resolve(); // we are not pass HabitablePlanet into resolve to be returned, when promies resolved, bacaused we export data out , here we are use promise to ensure data have all been sucessfully loaded before export
       });
