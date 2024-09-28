@@ -1,10 +1,17 @@
 const http = require("http");
 const app = require("./app");
-
+const { loadPlanetsData } = require("./model/planets.model");
 const server = http.createServer(app);
 //see app(express) as a middelware, separate middelware from server to organize better
 const PORT = process.env.PORT || 8000;
 
-server.listen(PORT, () => {
-  console.log(`Listing on port ${PORT}............`);
-});
+async function startServer() {
+  ///load data befor server response to user
+  await loadPlanetsData();
+  server.listen(PORT, () => {
+    //server.listen() starts the server and makes it listen for incoming connections on a specified port and optional hostname.
+    //This is the step that "activates" the server,  tells the server to begin listening for incoming connections on the specified port
+    console.log(`Server is running on port ${PORT}............`);
+  });
+}
+startServer();
