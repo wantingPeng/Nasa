@@ -1,4 +1,9 @@
-const { launches, addNewLaunch } = require("../../model/launches.model");
+const {
+  launches,
+  addNewLaunch,
+  existsLaunchWithId,
+  abortLaunchById,
+} = require("../../model/launches.model");
 
 function getAllLaunches(req, res) {
   return res.status(200).json(Array.from(launches.values()));
@@ -10,21 +15,32 @@ function httpAddNewLaunch(req, res) {
     !newLaunch.mission ||
     !newLaunch.rocket ||
     !newLaunch.launchDate ||
-    !newLaunch.destination
+    !newLaunch.target
   ) {
     return res.status(400).json({
       error: "missing required launch property",
     });
   }
+  newLaunch.launchDate = new Date(newLaunch.launchDate);
 
   if (isNaN(newLaunch.launchDate)) {
     return res.status(400).json({
       error: "invalid launch date",
     });
   }
-
-  newLaunch.launchDate = new Date(newLaunch.launchDate);
   addNewLaunch(newLaunch);
   return res.status(201).json(newLaunch); // if no .json(newLaunch);, in postman will got no response data returned
 }
-module.exports = { getAllLaunches, httpAddNewLaunch };
+
+function httpAbortLaunch(req, res) {
+  launchId = Number(req.params.id);
+
+  if (!existsLaunchWithId(launchId)) {
+    return res.status(404).json({ error: "lunch not found" });
+  }
+  const abortedLaunch = abortLaunchById(launchId);
+  {
+    return res.status(200).json(abortedLaunch);
+  }
+}
+module.exports = { getAllLaunches, httpAddNewLaunch, httpAbortLaunch };

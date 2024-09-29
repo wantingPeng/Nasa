@@ -5,7 +5,7 @@ const launch = {
   mission: "keplor exploration X",
   rocket: "explore 1",
   launchDate: new Date("december 27,2023"),
-  destination: "Kepler-1652 b",
+  target: "Kepler-1652 b",
   customer: ["Nasa", "cici"],
   upcoming: true,
   sucess: true,
@@ -23,6 +23,23 @@ function addNewLaunch(launch) {
     })
   );
 }
-
 launches.set(launch.flightNumber, launch);
-module.exports = { launches, addNewLaunch };
+
+function existsLaunchWithId(launchId) {
+  return launches.has(launchId);
+}
+
+function abortLaunchById(launchId) {
+  const abortedLaunch = launches.get(launchId);
+  abortedLaunch.upcoming = false;
+  abortedLaunch.sucess = false;
+
+  return abortedLaunch;
+}
+
+module.exports = {
+  launches,
+  addNewLaunch,
+  existsLaunchWithId,
+  abortLaunchById,
+};
