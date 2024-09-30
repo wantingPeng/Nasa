@@ -6,7 +6,7 @@
     "server": "npm run watch --prefix server",
     "client": "npm start --prefix client",
     "watch": "concurrently \"npm run server\" \"npm run client\"",
-    "test": " concurrently \"npm run test --prefix server\" \"npm run test --prefix client \" ",
+    "test": " concurrently \"npm test --prefix server\" \"npm test --prefix client \" ",
     "install-client": "npm install --prefix client",
     "install-server": "npm install --prefix server",
     "install": "npm run install-client ; npm run install-server",
