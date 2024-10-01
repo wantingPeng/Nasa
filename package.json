@@ -6,16 +6,20 @@
     "server": "npm run watch --prefix server",
     "client": "npm start --prefix client",
     "watch": "concurrently \"npm run server\" \"npm run client\"",
-    "test": " concurrently \"npm test --prefix server\" \"npm test --prefix client \" ",
+    "test": "npm test --prefix server && npm test --prefix client ",
     "install-client": "npm install --prefix client",
     "install-server": "npm install --prefix server",
-    "install": "npm run install-client ; npm run install-server",
-    "deploy": "concurrently \"npm run build --prefix client\" \"npm start --prefix server \" "
+    "install": "npm run install-client && npm run install-server",
+    "deploy": "concurrently \"npm run build --prefix client\" \"npm start --prefix server \" ",
+    "deploy-cluster": "npm run build --prefix client && npm run cluster --prefix server "
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "mongoose": "^8.7.0"
   }
 }
