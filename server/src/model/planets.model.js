@@ -1,7 +1,6 @@
 const { parse } = require("csv-parse");
 const fs = require("fs");
-
-const HabitablePlanet = [];
+const planets = require("./planets.mongo");
 function isHabitablePlanet(planet) {
   return (
     planet.koi_disposition === "CONFIRMED" &&
@@ -24,25 +23,41 @@ function loadPlanetsData() {
           columns: true, //The first line of the CSV is treated as header names for the columns, and each row is converted into an object with keys corresponding to the headers.
         })
       )
-      .on("data", (dataChunk) => {
+      .on("data", async (dataChunk) => {
         if (isHabitablePlanet(dataChunk)) {
-          HabitablePlanet.push(dataChunk);
-          /*       console.log(dataChunk);
-           */
+          savePlanet(dataChunk);
         }
       })
       .on("error", (err) => {
         console.log(err);
         reject(err); //but we still need reject to pass error
       })
-      .on("end", () => {
+      .on("end", async () => {
+        const countPlanets = (await getAllPlanets()).length;
         //This signifies the end of the data flow, but it doesn’t stop other parts of application from running while the data is being processed. so model.export might pass data while still processing
-        console.log(`${HabitablePlanet.length} habiable planets found`);
+        console.log(`${countPlanets} habiable planets found`);
         resolve(); // we are not pass HabitablePlanet into resolve to be returned, when promies resolved, bacaused we export data out , here we are use promise to ensure data have all been sucessfully loaded before export
       });
   });
 }
+
+function getAllPlanets() {
+  return planets.find({}); //returned as an array of documents that match your query criteria
+}
+
+async function savePlanet(dataChunk) {
+  try {
+    await planets.updateOne(
+      { keplerName: dataChunk.kepler_name },
+      { keplerName: dataChunk.kepler_name },
+      { upsert: true }
+    );
+  } catch (error) {
+    console.error(`Could not save planet ${error}`);
+  }
+}
+
 module.exports = {
   loadPlanetsData,
-  planets: HabitablePlanet,
+  getAllPlanets,
 };
