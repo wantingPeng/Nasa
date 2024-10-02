@@ -1,6 +1,6 @@
 const launches = require("./launches.mongo");
 const planets = require("./planets.mongo");
-let latestFlightNumber = 100;
+let firstFlightNumber = 100;
 const launch = {
   flightNumber: 100,
   mission: "keplor exploration X",
@@ -12,18 +12,25 @@ const launch = {
   sucess: true,
 };
 
-function addNewLaunch(launch) {
-  latestFlightNumber++;
-  launches.set(
-    latestFlightNumber,
-    Object.assign(launch, {
-      flightNumber: latestFlightNumber,
-      customer: ["Nasa", "cici"],
-      upcoming: true,
-      sucess: true,
-    })
-  );
+async function addNewLaunch(launch) {
+  const latestFlightNumber = (await getLatestFlightNumber()) + 1;
+  const newLaunch = Object.assign(launch, {
+    flightNumber: latestFlightNumber,
+    customer: ["Nasa", "cici"],
+    upcoming: true,
+    sucess: true,
+  });
+  await saveLaunch(newLaunch);
 }
+
+async function getLatestFlightNumber() {
+  const latestlaunch = await launches.findOne().sort("-flightNumber"); //sort the results by flightNumber in descending order
+  if (!latestlaunch) {
+    return firstFlightNumber;
+  }
+  return latestlaunch.flightNumber;
+}
+
 //launches.set(launch.flightNumber, launch);
 async function saveLaunch(launch) {
   const planet = await planets.findOne({
@@ -32,7 +39,8 @@ async function saveLaunch(launch) {
   if (!planet) {
     throw new Error("no matching planet found");
   }
-  await launches.updateOne(
+  await launches.findOneAndUpdate(
+    //updateOne
     {
       flightNumber: launch.flightNumber,
     },

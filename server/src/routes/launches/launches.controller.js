@@ -8,9 +8,8 @@ const {
 async function httpGetAllLaunches(req, res) {
   return res.status(200).json(await getAllLaunches());
 }
-function httpAddNewLaunch(req, res) {
+async function httpAddNewLaunch(req, res) {
   const newLaunch = req.body;
-
   if (
     !newLaunch.mission ||
     !newLaunch.rocket ||
@@ -28,7 +27,8 @@ function httpAddNewLaunch(req, res) {
       error: "invalid launch date",
     });
   }
-  addNewLaunch(newLaunch);
+  await addNewLaunch(newLaunch); // objects newLaunch are passed by reference,many changes made to that object inside the function will be reflected
+  //because they share the same reference to the object
   return res.status(201).json(newLaunch); // if no .json(newLaunch);, in postman will got no response data returned
 }
 
