@@ -35,4 +35,4 @@ const launchesSchema = new mongoose.Schema({
   },
 });
 
-module.export = mongoose.model("Lauch", launchesSchema);
+module.exports = mongoose.model("Lauch", launchesSchema);

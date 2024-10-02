@@ -1,12 +1,12 @@
 const {
-  launches,
+  getAllLaunches,
   addNewLaunch,
   existsLaunchWithId,
   abortLaunchById,
 } = require("../../model/launches.model");
 
-function getAllLaunches(req, res) {
-  return res.status(200).json(Array.from(launches.values()));
+async function httpGetAllLaunches(req, res) {
+  return res.status(200).json(await getAllLaunches());
 }
 function httpAddNewLaunch(req, res) {
   const newLaunch = req.body;
@@ -43,4 +43,4 @@ function httpAbortLaunch(req, res) {
     return res.status(200).json(abortedLaunch);
   }
 }
-module.exports = { getAllLaunches, httpAddNewLaunch, httpAbortLaunch };
+module.exports = { httpGetAllLaunches, httpAddNewLaunch, httpAbortLaunch };

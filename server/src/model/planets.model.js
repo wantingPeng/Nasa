@@ -42,7 +42,13 @@ function loadPlanetsData() {
 }
 
 function getAllPlanets() {
-  return planets.find({}); //returned as an array of documents that match your query criteria
+  return planets.find(
+    {},
+    {
+      __v: 0,
+      _id: 0,
+    }
+  ); //returned as an array of documents that match your query criteria
 }
 
 async function savePlanet(dataChunk) {
