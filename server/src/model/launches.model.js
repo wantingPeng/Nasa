@@ -40,12 +40,12 @@ async function saveLaunch(launch) {
     throw new Error("no matching planet found");
   }
   await launches.findOneAndUpdate(
-    //updateOne
+    //updateOne, have  __setONinsert in data
     {
       flightNumber: launch.flightNumber,
     },
     launch,
-    { upsert: true }
+    { upsert: true } // insert launch if flightNumber doesn't exist
   );
 }
 saveLaunch(launch);
@@ -54,16 +54,19 @@ async function getAllLaunches() {
   return await launches.find({}, { __v: 0, _id: 0 });
 }
 
-function existsLaunchWithId(launchId) {
-  return launches.has(launchId);
+async function existsLaunchWithId(launchId) {
+  return await launches.findOne({ flightNumber: launchId });
 }
 
-function abortLaunchById(launchId) {
-  const abortedLaunch = launches.get(launchId);
+async function abortLaunchById(launchId) {
+  /*   const abortedLaunch = launches.get(launchId);
   abortedLaunch.upcoming = false;
-  abortedLaunch.sucess = false;
-
-  return abortedLaunch;
+  abortedLaunch.sucess = false; */
+  const abortedLaunch = await launches.updateOne(
+    { flightNumber: launchId },
+    { upcoming: false, sucess: false }
+  ); //no { upsert: true } dont insert updateData if flightNumber doesn't exist
+  return abortedLaunch.acknowledged && abortedLaunch.matchedCount === 1;
 }
 
 module.exports = {

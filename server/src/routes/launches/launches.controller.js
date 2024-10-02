@@ -32,15 +32,17 @@ async function httpAddNewLaunch(req, res) {
   return res.status(201).json(newLaunch); // if no .json(newLaunch);, in postman will got no response data returned
 }
 
-function httpAbortLaunch(req, res) {
-  launchId = Number(req.params.id);
+async function httpAbortLaunch(req, res) {
+  launchId = Number(req.params.id); //in upcoming.js passed launch.flightNumber as id
 
-  if (!existsLaunchWithId(launchId)) {
+  const existsLaunch = await existsLaunchWithId(launchId);
+  if (!existsLaunch) {
     return res.status(404).json({ error: "lunch not found" });
   }
-  const abortedLaunch = abortLaunchById(launchId);
-  {
-    return res.status(200).json(abortedLaunch);
+  const abortedLaunch = await abortLaunchById(launchId);
+  if (!abortedLaunch) {
+    return res.status(400).json({ error: "abording failed" });
   }
+  return res.status(200).json({ ok: true });
 }
 module.exports = { httpGetAllLaunches, httpAddNewLaunch, httpAbortLaunch };
