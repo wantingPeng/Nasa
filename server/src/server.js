@@ -2,7 +2,7 @@ const http = require("http");
 const app = require("./app");
 const { mongoConnect } = require("./utils/mongooseConnection");
 const { loadPlanetsData } = require("./model/planets.model");
-const { loadLaunchData } = require("./model/launches.model");
+const { loadSpaceXData } = require("./model/launches.model");
 
 const { error } = require("console");
 const server = http.createServer(app);
@@ -13,7 +13,7 @@ async function startServer() {
   await mongoConnect();
   ///load data befor server response to user
   await loadPlanetsData();
-  await loadLaunchData();
+  await loadSpaceXData();
   server.listen(PORT, () => {
     //server.listen() starts the server and makes it listen for incoming connections on a specified port and optional hostname.
     //This is the step that "activates" the server,  tells the server to begin listening for incoming connections on the specified port
