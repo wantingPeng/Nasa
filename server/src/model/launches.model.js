@@ -1,5 +1,6 @@
 const launches = require("./launches.mongo");
 const planets = require("./planets.mongo");
+const axios = require("axios");
 let firstFlightNumber = 100;
 const launch = {
   flightNumber: 100,
@@ -69,9 +70,53 @@ async function abortLaunchById(launchId) {
   return abortedLaunch.acknowledged && abortedLaunch.matchedCount === 1;
 }
 
+const SPACE_API_URL = "https://api.spacexdata.com/v4/launches/query";
+async function loadLaunchData() {
+  console.log("Downloading launch data.....");
+  const response = await axios.post(SPACE_API_URL, {
+    query: {},
+    options: {
+      pagination: false,
+      populate: [
+        {
+          path: "rocket",
+          /*    page:2,
+          limit:20, */
+
+          select: {
+            name: 1, //1:include this field in the result."
+          },
+        },
+        {
+          path: "payloads",
+          select: {
+            customers: 1,
+          },
+        },
+      ],
+    },
+  });
+  const spaceXAll = response.data.docs;
+  for (const spaceX of spaceXAll) {
+    const payloads = spaceX["payloads"];
+    const customers = payloads.flatMap((payload) => payload["customers"]); // flaten all customers into a array
+
+    const history = {
+      flightNumber: spaceX["flight_number"],
+      mission: spaceX["name"],
+      rocket: spaceX["rocket"]["name"],
+      launchDate: spaceX["date_local"],
+      upcoming: spaceX["upcoming"],
+      success: spaceX["success"],
+      customers,
+    };
+    console.log(`${history.flightNumber} ${history.mission}`);
+  }
+}
 module.exports = {
   getAllLaunches,
   addNewLaunch,
   existsLaunchWithId,
   abortLaunchById,
+  loadLaunchData,
 };
