@@ -44,7 +44,7 @@ async function saveLaunch(launch) {
 async function getAllLaunches(limit, skip) {
   return await launches
     .find({}, { __v: 0, _id: 0 })
-    .sort("-flightNumber")
+    .sort("flightNumber")
     .skip(skip)
     .limit(limit);
 }
