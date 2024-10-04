@@ -2,16 +2,6 @@ const launches = require("./launches.mongo");
 const planets = require("./planets.mongo");
 const axios = require("axios");
 let firstFlightNumber = 100;
-const launch = {
-  flightNumber: 100,
-  mission: "keplor exploration X",
-  rocket: "explore 1",
-  launchDate: new Date("december 27,2023"),
-  target: "Kepler-1652 b",
-  customers: ["Nasa", "cici"],
-  upcoming: true,
-  sucess: true,
-};
 
 async function addNewLaunch(launch) {
   const planet = await planets.findOne({
@@ -24,7 +14,7 @@ async function addNewLaunch(launch) {
   const latestFlightNumber = (await getLatestFlightNumber()) + 1;
   const newLaunch = Object.assign(launch, {
     flightNumber: latestFlightNumber,
-    customer: ["Nasa", "cici"],
+    customers: ["Nasa", "cici"],
     upcoming: true,
     sucess: true,
   });
@@ -50,10 +40,13 @@ async function saveLaunch(launch) {
     { upsert: true } // insert launch if flightNumber doesn't exist
   );
 }
-saveLaunch(launch);
 
 async function getAllLaunches(limit, skip) {
-  return await launches.find({}, { __v: 0, _id: 0 }).skip(skip).limit(limit);
+  return await launches
+    .find({}, { __v: 0, _id: 0 })
+    .sort("-flightNumber")
+    .skip(skip)
+    .limit(limit);
 }
 
 async function existsLaunchWithId(launchId) {
