@@ -8,7 +8,7 @@ const launch = {
   rocket: "explore 1",
   launchDate: new Date("december 27,2023"),
   target: "Kepler-1652 b",
-  customer: ["Nasa", "cici"],
+  customers: ["Nasa", "cici"],
   upcoming: true,
   sucess: true,
 };
@@ -52,8 +52,8 @@ async function saveLaunch(launch) {
 }
 saveLaunch(launch);
 
-async function getAllLaunches() {
-  return await launches.find({}, { __v: 0, _id: 0 });
+async function getAllLaunches(limit, skip) {
+  return await launches.find({}, { __v: 0, _id: 0 }).skip(skip).limit(limit);
 }
 
 async function existsLaunchWithId(launchId) {
@@ -77,6 +77,7 @@ async function loadSpaceXData() {
     flightNumber: 1,
     rocket: "Falcon 1",
     mission: "FalconSat",
+    customers: ["DARPA"],
   });
   if (firstLaunch) {
     console.log("launch data already loaded");
@@ -112,10 +113,18 @@ async function populateLaunches() {
       ],
     },
   });
+
+  if (response.status !== 200) {
+    console.log("Problem downloading spaceX data");
+    throw new Error("spaceX data download failed");
+  }
+
   const spaceXAll = response.data.docs;
   for (const spaceX of spaceXAll) {
     const payloads = spaceX["payloads"];
-    const customers = payloads.flatMap((payload) => payload["customers"]); // flaten all customers into a array
+    const customers = payloads.flatMap((payload) => {
+      return payload["customers"];
+    }); // flaten all customers into a array
 
     const history = {
       flightNumber: spaceX["flight_number"],

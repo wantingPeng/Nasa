@@ -19,7 +19,7 @@ const launchesSchema = new mongoose.Schema({
   target: {
     type: String,
   },
-  customer: {
+  customers: {
     type: [String],
     required: true,
   },

@@ -4,9 +4,16 @@ const {
   existsLaunchWithId,
   abortLaunchById,
 } = require("../../model/launches.model");
+const { getPagination } = require("../../utils/query");
 
 async function httpGetAllLaunches(req, res) {
-  return res.status(200).json(await getAllLaunches());
+  console.log(req.query);
+
+  const { limit, skip } = getPagination(req.query); //{ limit: '5', page: '2' }
+  console.log(limit);
+  console.log(skip);
+
+  return res.status(200).json(await getAllLaunches(limit, skip));
 }
 async function httpAddNewLaunch(req, res) {
   const newLaunch = req.body;
