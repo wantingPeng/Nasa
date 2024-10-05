@@ -1,7 +1,7 @@
 name: NASA Project CI
 on:
-  push: branches: [main]
-  pull_request: branches: [main]
+  push: branches: - main
+  pull_request: branches: - main
 jobs:
   build:
     runs-on: ubuntu-latest #specify which platform this jobs should run on  [windows-latest,macos-latest]
