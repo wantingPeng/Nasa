@@ -11,8 +11,8 @@ jobs:
     env:
       CI: true # in continous integration enviroment, exit test automatically,
     strategy: # can run build job in diff env
-        matrix: 
-            node-version: [20.x,16.x],
+      matrix:
+        node-version: [20.x, 16.x]
     runs-on: ubuntu-latest #specify which platform this jobs should run on  [windows-latest,macos-latest]
     steps: #define actions, that is going to be taken on operating system when build job is triggerd by push,pull
       - name: Checkout code # Step 1: Checkout the repository to the runner
@@ -23,4 +23,4 @@ jobs:
           node-version: ${{matrix.node-version}} # Specify the Node.js version you want to use
       - run: npm install #Install dependencies defined in root package.json on specified operating system
       - run: npm run build --prefix client
-      - run: npm test  # default in client test in react app keep watching,reqiure exit manully, so we set CI: true ro exit auto
+      - run: npm test # default in client test in react app keep watching,reqiure exit manully, so we set CI: true ro exit auto
