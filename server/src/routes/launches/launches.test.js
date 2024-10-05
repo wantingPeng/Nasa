@@ -5,9 +5,11 @@ const {
   mongoDisconnet,
 } = require("../../utils/mongooseConnection");
 
+const { loadPlanetsData } = require("../../model/planets.model");
 describe("launch Api", () => {
   beforeAll(async () => {
     await mongoConnect();
+    await loadPlanetsData();
   });
 
   afterAll(async () => {
