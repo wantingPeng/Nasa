@@ -1,9 +1,11 @@
 name: NASA Project CI
 on:
   push:
-   branches: - main
+    branches:
+      - main
   pull_request:
-   branches: - main
+    branches:
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest #specify which platform this jobs should run on  [windows-latest,macos-latest]
@@ -13,6 +15,6 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-         node-version: "20" # Specify the Node.js version you want to use
+          node-version: "20" # Specify the Node.js version you want to use
       - run: npm install #Install dependencies defined in root package.json on specified operating system
       - run: npm run build --prefix client
