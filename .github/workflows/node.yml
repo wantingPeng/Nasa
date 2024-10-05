@@ -10,7 +10,7 @@ jobs:
   build:
     env:
       CI: true # in continous integration enviroment, exit test automatically,
-      strategy: # can run build job in diff env
+    strategy: # can run build job in diff env
         matrix: 
             node-version: [20.x,16.x],
     runs-on: ubuntu-latest #specify which platform this jobs should run on  [windows-latest,macos-latest]
