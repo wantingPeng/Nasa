@@ -1,0 +1,9 @@
+#files or folder, which we want to ignore from Dockerfile, when we do the copy command 
+*/node_module 
+#exclude node module from both client and server , avoiding copy it , install them in Dockerfile again, 
+#to fit the lts alpine operating system , because we install node_module first in our own system,
+#but actuall it might be used in various system, in diff system, node_module can be diff, so always need to reinstall node_module in diff system
+.git
+
+server/public 
+#make sure scratch every thing over again in new system 

@@ -1,0 +1,41 @@
+FROM node:lts-alpine
+
+#It’s the foundational layer upon which additional layers,  The base image provides the operating system and system-level utilities required to run the software within the container.
+#that your container will need to run your application.
+#node: it includes all the essential tools to run and manage Node.js applications.The lts tag refers to the Long-Term Support version of Node.js
+#alpine: This refers to the Alpine Linux distribution,Using alpine results in smaller Docker images, 
+
+WORKDIR /app
+
+#This sets the working directory inside the container to /app.All subsequent commands (like COPY and RUN) will operate relative to this directory.
+
+COPY package*.json ./
+#This copies both package.json and package-lock.json (if they exist) from your local machine to the /app directory inside the container.
+#package*.json is a wildcard pattern that matches package.json and package-lock.json.
+
+COPY client/package.json  client/
+#copy client/package.json into client folder, if there are no client folder initially, then will be created firstly
+
+RUN npm run build --prefix client
+#The --prefix client option tells npm to run the build command in the client directory (not in the root directory).
+
+npm install
+#Reads the package.json File: installs all the required packages (dependencies) listed in the dependencies and devDependencies sections of package.json
+#The downloaded packages are placed into the node_modules directory
+
+
+
+USER node
+# user refers to an account or identity
+# root user: the container perform any action on the system, including installing software, modifying system files, and managing other users.
+#attacker  might gain full control of the container. 
+#Node User: After this command, the container runs as the less privileged node user, which can execute the application (npm start) but won't have the ability to perform privileged tasks.
+#Before this command: All instructions are executed as the root user.
+#After this command: All instructions (e.g., starting the application, executing commands) are executed as the node user, which has limited privileges.
+
+EXPOSE 8000
+#the container will listen on port 8000 at runtime.to make the port accessible from outside the container
+
+#Benefits of Docker Layers:Layers are cached, layer hasn’t changed, it will reuse that layer instead of rebuilding it. This greatly speeds up the build process.
+This is why frequently changing instructions (like RUN or COPY) should be placed lower in the Dockerfile, so earlier layers can be cached.
+like RUN npm run install-client --only=production will only be updated when either root package.json or client/package.json changed
