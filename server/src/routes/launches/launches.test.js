@@ -8,8 +8,8 @@ const {
 const { loadPlanetsData } = require("../../model/planets.model");
 describe("launch Api", () => {
   beforeAll(async () => {
-    await mongoConnect();
-    await loadPlanetsData();
+    await mongoConnect(); //when we running test file, just required app, actually don't start srever,
+    await loadPlanetsData(); // so mongoConnect() and loadPlanetsData() didn't actually be connected,  here so we have to load it again
   });
 
   afterAll(async () => {
