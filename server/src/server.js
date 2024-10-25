@@ -7,6 +7,7 @@ const { loadSpaceXData } = require("./model/launches.model");
 
 const { error } = require("console");
 const server = http.createServer(app);
+//meaning the Express app will handle all incoming HTTP requests. This means that every incoming request will be processed by the Express application (app)
 //see app(express) as a middelware, separate middelware from server to organize better
 const PORT = process.env.PORT || 8000;
 

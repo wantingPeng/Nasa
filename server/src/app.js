@@ -9,7 +9,7 @@ app.use(
     origin: "http://localhost:3000",
   })
 );
-app.use(morgan("combined"));
+app.use(morgan("combined")); //Logs details about each HTTP request (e.g., method, URL, status code, response time).
 
 app.use(express.json());
 app.use("/v1", api);

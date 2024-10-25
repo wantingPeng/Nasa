@@ -1,4 +1,4 @@
-const request = require("supertest");
+const request = require("supertest"); //It allows you to make HTTP requests to your Express.js (or any other Node.js-based) application without needing to start the server on a specific port.
 const app = require("../../app");
 const {
   mongoConnect,
